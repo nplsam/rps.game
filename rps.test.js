@@ -1,0 +1,3 @@
+const { rps } = require('./rps')
+
+
