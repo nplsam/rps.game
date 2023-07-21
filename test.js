@@ -1,0 +1,1 @@
+var choice1 = window.prompt("Do you choose rock, paper or scissors? ")
