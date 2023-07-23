@@ -1,46 +1,78 @@
-const prompt = require('prompt-sync') ();
+const prompt = require("prompt-sync") ();
+const colours = require("ansi-colors");
 
-const rps = (choice1, choice2) => {
-    let player = 0
-    let comp = 0
+const arr = ['rock', 'paper', 'scissors'];
 
-    let compChoice = Math.random();
-    choice2 = compChoice < 0.33 ? "rock" : ( compChoice > 0.66 ? "scissors" : "paper" ); 
+const getCompChoice = () => {
+    const choice = Math.random(Math.floor());
+    const ranChoice = choice < 0.33 ? "rock" : ( choice > 0.66 ? "scissors" : "paper" ); 
+    return ranChoice;
+    
+}
 
-    if (choice1 === choice2) return "Draw!";
-    if (choice1 === "get count") return score;
+const getUserChoice = () => {
+    let userChoice = "";
+    let validInput = false;
 
-    if (choice1 === "rock" && choice2 === "scissors") {
-        return "User wins!"
-    } else if (choice1 === "scissors" && choice2 === "paper") {
-        return "User wins!" 
-    } else if (choice1 === "paper" && choice2 === "rock") {
-        return "User Wins!" 
-    } else if (choice1 === "scissors" && choice2 === "rock") {
-        return "Computer Wins!"
-    } else if (choice1 === "paper" && choice2 === "scissors") {
-        return "Computer Wins!" 
-    } else if (choice1 === "rock" && choice2 === "paper") {
-        return "Computer Wins!"
+    while (!validInput) {
+        userChoice = prompt("Rock, Paper, Scissors: ");
+        if (userChoice === "rock" || userChoice === "paper" || userChoice === "scissors") {
+            validInput = true;
+        }
+    }
+    return userChoice;
+}
+
+const playGame = (userChoice, compChoice) => {
+    const result = getWinner(userChoice, compChoice);
+    if (result === "Draw") { 
+        return colours.yellow("It's a draw!");
+    } else if (result === "User") {
+        return colours.green(`User wins! ${userChoice} beats ${compChoice}`);
+    } else {
+        return colours.red(`Computer wins! ${compChoice} beats ${userChoice}`);
+    }
+} 
+
+const getWinner = (userChoice, compChoice) => {
+    
+    if (userChoice === compChoice) {
+        return 'Draw';
+    } else if (userChoice === "rock" && compChoice === "scissors") {
+        return "User";
+    } else if (userChoice === "scissors" && compChoice === "paper") {
+        return "User"; 
+    } else if (userChoice === "paper" && compChoice === "rock") {
+        return "User";
+    } else if (userChoice === "scissors" && compChoice === "rock") {
+        return "Computer";
+    } else if (userChoice === "paper" && compChoice === "scissors") {
+        return "Computer";
+    } else if (userChoice === "rock" && compChoice === "paper") {
+        return "Computer";
     }
 };
 
-// const rules = {rock: 'sicssors', paper: 'rock', scissors: 'paper'};
-// if (choice2 === rules[choice1]) {
-//     return "User wins!"
-// } else { 
-//     return "Computer wins!"
+const playRps = () => {
+    let userScore = 0;
+    let compScore = 0;
+    for (let i =0; i<3; i++) {
+        const userChoice = getUserChoice();
+        const compChoice = getCompChoice();
+        console.log(playGame(userChoice, compChoice));
+        if (getWinner(userChoice, compChoice) === "User") {
+            userScore++;
+        } else if (getWinner(userChoice, compChoice) === "Computer") {
+            compScore++;
+    }
+}}
 
+playRps();
 
-// let score = console.log(`User Score: ${player} Computer Score: ${comp}`);
-
-
-// module.exports = {
-//     rps
-// }
-
-// was troubleshooting with the counter and display of results, can fix in my own time just wanted to
-// upload a working game
-
-let choice1 = prompt("Enter Choice: ")
-console.log(rps(choice1,))
+module.exports = {
+    getCompChoice,
+    getUserChoice,
+    getWinner,
+    playGame,
+    playRps
+}
